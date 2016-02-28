@@ -1,0 +1,32 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'idea'
+
+group = 'bbejeck'
+version = '1.0-SNAPSHOT'
+
+description = """"""
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+
+jar {
+  archiveName='bbejeck-kafka-streams-1.0-SNAPSHOT.jar'
+}
+
+repositories {
+     mavenCentral()
+}
+
+dependencies {
+    compile group: 'com.google.code.gson', name: 'gson', version:'2.6.1'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version:'2.7.1'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version:'2.7.1'
+    compile group: 'com.google.guava', name: 'guava', version:'19.0'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version:'3.1'
+    compile group: 'com.101tec', name:'zkclient', version:'0.7'
+    compile group: 'com.yammer.metrics', name:'metrics-core', version:'2.2.0'
+    compile files('libs/kafka-streams-0.10.0.0-SNAPSHOT.jar','libs/kafka-clients-0.10.0.0-SNAPSHOT.jar')
+    testCompile group: 'junit', name: 'junit', version:'4.11'
+}

@@ -58,10 +58,10 @@ public class StockSummaryStatefulProcessorDriver {
                        .addSink("sink", "stocks-out", stringSerializer,stockTxnJsonSerializer,"stocks-source")
                        .addSink("sink-2", "transaction-summary", stringSerializer, stockTxnSummarySerializer, "summary");
 
-        System.out.println("Starting KafkaStreaming");
+        System.out.println("Starting StockSummaryStatefulProcessor Example");
         KafkaStreams streaming = new KafkaStreams(builder, streamingConfig);
         streaming.start();
-        System.out.println("Now started");
+        System.out.println("StockSummaryStatefulProcessor Example now started");
 
     }
 

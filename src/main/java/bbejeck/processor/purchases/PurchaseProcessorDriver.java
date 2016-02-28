@@ -60,10 +60,10 @@ public class PurchaseProcessorDriver {
                 .addSink("SINK2", "rewards",stringSerializer, rewardAccumulatorJsonSerializer, "PROCESS3")
                 .addSink("SINK3", "purchases", stringSerializer, purchaseJsonSerializer, "PROCESS");
 
-        System.out.println("Starting KafkaStreaming");
+        System.out.println("Starting PurchaseProcessor Example");
         KafkaStreams streaming = new KafkaStreams(topologyBuilder, streamingConfig);
         streaming.start();
-        System.out.println("Now started");
+        System.out.println("Now started PurchaseProcessor Example");
 
     }
 

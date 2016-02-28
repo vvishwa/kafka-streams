@@ -1,6 +1,7 @@
 apply plugin: 'java'
 apply plugin: 'maven'
 apply plugin: 'idea'
+apply plugin: 'application'
 
 group = 'bbejeck'
 version = '1.0-SNAPSHOT'
@@ -9,6 +10,9 @@ description = """"""
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
+
+mainClassName = System.getProperty("mainClass")
 
 
 jar {

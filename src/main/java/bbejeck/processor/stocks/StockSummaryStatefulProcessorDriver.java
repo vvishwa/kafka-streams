@@ -14,54 +14,52 @@
  * limitations under the License.
  */
 
-package bbejeck.client.processor.purchases;
+package bbejeck.processor.stocks;
 
-import bbejeck.client.processor.serializer.JsonDeserializer;
-import bbejeck.client.processor.serializer.JsonSerializer;
-import bbejeck.model.Purchase;
-import bbejeck.model.PurchasePattern;
-import bbejeck.model.RewardAccumulator;
+import bbejeck.serializer.JsonDeserializer;
+import bbejeck.serializer.JsonSerializer;
+import bbejeck.model.StockTransaction;
+import bbejeck.model.StockTransactionSummary;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.processor.TopologyBuilder;
 import org.apache.kafka.streams.processor.internals.WallclockTimestampExtractor;
+import org.apache.kafka.streams.state.Stores;
 
 import java.util.Properties;
 
 /**
  * User: Bill Bejeck
- * Date: 11/5/15
- * Time: 10:22 PM
+ * Date: 2/8/16
+ * Time: 5:11 PM
  */
-public class PurchaseProcessorDriver {
+public class StockSummaryStatefulProcessorDriver {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
         StreamsConfig streamingConfig = new StreamsConfig(getProperties());
 
-        JsonDeserializer<Purchase> purchaseJsonDeserializer = new JsonDeserializer<>(Purchase.class);
-        JsonSerializer<Purchase> purchaseJsonSerializer = new JsonSerializer<>();
-        JsonSerializer<RewardAccumulator> rewardAccumulatorJsonSerializer = new JsonSerializer<>();
-        JsonSerializer<PurchasePattern> purchasePatternJsonSerializer = new JsonSerializer<>();
+        TopologyBuilder builder = new TopologyBuilder();
 
-        StringDeserializer stringDeserializer = new StringDeserializer();
+        JsonSerializer<StockTransactionSummary> stockTxnSummarySerializer = new JsonSerializer<>();
+        JsonDeserializer<StockTransactionSummary> stockTxnSummaryDeserializer = new JsonDeserializer<>(StockTransactionSummary.class);
+        JsonDeserializer<StockTransaction> stockTxnDeserializer = new JsonDeserializer<>(StockTransaction.class);
+        JsonSerializer<StockTransaction> stockTxnJsonSerializer = new JsonSerializer<>();
         StringSerializer stringSerializer = new StringSerializer();
+        StringDeserializer stringDeserializer = new StringDeserializer();
 
-        TopologyBuilder topologyBuilder = new TopologyBuilder();
-        topologyBuilder.addSource("SOURCE", stringDeserializer, purchaseJsonDeserializer, "src-topic")
 
-                .addProcessor("PROCESS", CreditCardAnonymizer::new, "SOURCE")
-                .addProcessor("PROCESS2", PurchasePatterns::new, "PROCESS")
-                .addProcessor("PROCESS3", CustomerRewards::new, "PROCESS")
-
-                .addSink("SINK", "patterns", stringSerializer, purchasePatternJsonSerializer, "PROCESS2")
-                .addSink("SINK2", "rewards",stringSerializer, rewardAccumulatorJsonSerializer, "PROCESS3")
-                .addSink("SINK3", "purchases", stringSerializer, purchaseJsonSerializer, "PROCESS");
+        builder.addSource("stocks-source", stringDeserializer, stockTxnDeserializer, "stocks")
+                       .addProcessor("summary", StockSummary::new, "stocks-source")
+                       .addStateStore(Stores.create("stock-transactions").withStringKeys()
+                               .withValues(stockTxnSummarySerializer,stockTxnSummaryDeserializer).inMemory().maxEntries(100).build(),"summary")
+                       .addSink("sink", "stocks-out", stringSerializer,stockTxnJsonSerializer,"stocks-source")
+                       .addSink("sink-2", "transaction-summary", stringSerializer, stockTxnSummarySerializer, "summary");
 
         System.out.println("Starting KafkaStreaming");
-        KafkaStreams streaming = new KafkaStreams(topologyBuilder, streamingConfig);
+        KafkaStreams streaming = new KafkaStreams(builder, streamingConfig);
         streaming.start();
         System.out.println("Now started");
 
@@ -69,9 +67,9 @@ public class PurchaseProcessorDriver {
 
     private static Properties getProperties() {
         Properties props = new Properties();
-        props.put(StreamsConfig.CLIENT_ID_CONFIG, "Example-Processor-Job");
+        props.put(StreamsConfig.CLIENT_ID_CONFIG, "Sample-Stateful-Processor");
         props.put("group.id", "test-consumer-group");
-        props.put(StreamsConfig.JOB_ID_CONFIG, "testing-processor-api");
+        props.put(StreamsConfig.JOB_ID_CONFIG, "stateful_processor_id");
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(StreamsConfig.ZOOKEEPER_CONNECT_CONFIG, "localhost:2181");
         props.put(StreamsConfig.REPLICATION_FACTOR_CONFIG, 1);

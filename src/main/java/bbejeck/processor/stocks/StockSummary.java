@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package bbejeck.client.processor.stocks;
+package bbejeck.processor.stocks;
 
 import bbejeck.model.StockTransaction;
 import bbejeck.model.StockTransactionSummary;

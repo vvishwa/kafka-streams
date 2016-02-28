@@ -1,4 +1,4 @@
-package bbejeck.client.processor.serializer;
+package bbejeck.serializer;
 
 import com.google.gson.Gson;
 import org.apache.kafka.common.serialization.Deserializer;

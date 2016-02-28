@@ -1,4 +1,4 @@
-package bbejeck.client.processor.purchases;
+package bbejeck.processor.purchases;
 
 import bbejeck.model.Purchase;
 import bbejeck.model.PurchasePattern;

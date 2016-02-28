@@ -1,4 +1,4 @@
-package bbejeck.client.processor.purchases;
+package bbejeck.processor.purchases;
 
 import bbejeck.model.Purchase;
 import org.apache.kafka.streams.processor.AbstractProcessor;

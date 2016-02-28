@@ -35,6 +35,7 @@ import java.util.Objects;
 public class StockSummary extends AbstractProcessor<String, StockTransaction> {
 
     private KeyValueStore<String, StockTransactionSummary> summaryStore;
+    private ProcessorContext context;
 
 
     public void process(String key, StockTransaction stockTransaction) {
@@ -47,16 +48,16 @@ public class StockSummary extends AbstractProcessor<String, StockTransaction> {
         }
         summaryStore.put(currentSymbol, transactionSummary);
 
-        context().commit();
+        this.context.commit();
     }
 
 
     @Override
     @SuppressWarnings("unchecked")
     public void init(ProcessorContext context) {
-        super.init(context);
-        context().schedule(10000);
-        summaryStore = (KeyValueStore<String, StockTransactionSummary>) context().getStateStore("stock-transactions");
+        this.context = context;
+        this.context.schedule(10000);
+        summaryStore = (KeyValueStore<String, StockTransactionSummary>) this.context.getStateStore("stock-transactions");
         Objects.requireNonNull(summaryStore, "State store can't be null");
 
     }
@@ -69,7 +70,7 @@ public class StockSummary extends AbstractProcessor<String, StockTransaction> {
         while (it.hasNext()) {
             StockTransactionSummary summary = it.next().value;
             if (summary.updatedWithinLastMillis(currentTime, 11000)) {
-                context().forward(summary.tickerSymbol, summary);
+                this.context.forward(summary.tickerSymbol, summary);
             }
         }
     }

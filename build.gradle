@@ -14,6 +14,17 @@ targetCompatibility = 1.8
 
 mainClassName = System.getProperty("mainClass")
 
+task runPurchaseStreams(type: JavaExec){
+   classpath sourceSets.main.runtimeClasspath
+   main = "bbejeck.processor.purchases.PurchaseProcessorDriver"
+}
+
+task runStockStreams(type: JavaExec){
+   classpath sourceSets.main.runtimeClasspath
+   main = "bbejeck.processor.stocks.StockSummaryStatefulProcessorDriver"
+}
+
+
 
 jar {
   archiveName='bbejeck-kafka-streams-1.0-SNAPSHOT.jar'

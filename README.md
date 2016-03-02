@@ -1,4 +1,76 @@
 #kafka-streams
+This is the repository for the examples of using Kafka streams covered in the blog posts: 
+
+*    [Introducing The Kafka Processor API](codingjunkie.net/kafka-processor-part1/)
+
+## Requirements to build this project
+
+1.    Java 8
+2.    Gradle
+
+## Requirements to run the examples
+
+1.    [kafka](https://github.com/apache/kafka) version kafka_2.11-0.10.0.0-SNAPSHOT see the section marked "Running a task on a particular version of Scala"
+2.    The [json-data-generator](https://github.com/acesinc/json-data-generator) from [ACES,Inc](http://acesinc.net/) 
+
+
+## Dependencies included in repository
+As the Kafka Streams/Processor API is a work in progress, this repo includes the following jar files known to work with the examples
+
+1.    kafka-streams-0.10.0.0-SNAPSHOT.jar
+2.    kafka-clients-0.10.0.0-SNAPSHOT.jar
+
+## Setup Instructions
+
+#### Extact the kafka_2.11-0.10.0.0-SNAPSHOT.tgz file ####
+    tar -xvzf kafka_2.11-0.10.0.0-SNAPSHOT.tgz
+    
+#### Install the Json-Data-Generator  
+Download the latest [json-data-generator release](https://github.com/acesinc/json-data-generator/releases) and follow the install instructions [here](http://acesinc.net/introducing-a-streaming-json-data-generator/)
+
+Clone or fork the repo
+```
+     git clone git@github.com:bbejeck/kafka-streams    
+     cd kafka-streams
+```     
+     
+     
+    
+Then copy the json config files to json generator conf directory
+```
+    cp streaming-workflows/* <dir>/json-data-generator-1.2.0/conf
+```    
+    
+Create all the topics required by the examples
+```
+     ./bin/create-topics.sh /usr/local/kafka_2.11-0.10.0.0 localhost 2181
+     args are kafka home, zookeeper host and zookeeper port adjust accordingly
+```     
+
+Start zookeeper and kafka
+```
+      kafka-install-dir/bin/zookeeper-server-start.sh ../conf/zookeeper.properties
+      kafka-install-dir/bin/kafka-server-start ../conf/server.properties
+```
 
 ### Running the Purchase Streaming Examples ###
+     cd <dir>/json-data-generator-1.2.0/
+     java -jar json-data-generator-1.2.0 purchases-config.json
+     cd kafka-streams
      ./gradlew runPurchaseStreams
+     
+
+### Running the Stock Trades Streaming Examples ###
+     cd <dir>/json-data-generator-1.2.0/
+     java -jar json-data-generator-1.2.0 stock-transactions-config.json
+     cd kafka-streams
+     ./gradlew runStockStreams
+
+### Viewing the results of the purchase streaming examples ###
+    cd kafka_install-dir/bin
+    ./kafka-console-consumer --topic [patterns|rewards|purchases] --zookeeper localhost:2181
+     
+### Viewing the results of the stock-trading streaming examples ###
+    cd kafka_install-dir/bin
+    ./kafka-console-consumer --topic [stocks-out|transaction-summary] --zookeeper localhost:2181
+          

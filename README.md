@@ -28,14 +28,12 @@ As the Kafka Streams/Processor API is a work in progress, this repo includes the
 #### Install the Json-Data-Generator  
 Download the latest [json-data-generator release](https://github.com/acesinc/json-data-generator/releases) and follow the install instructions [here](http://acesinc.net/introducing-a-streaming-json-data-generator/)
 
+#### Setup the kafka-streams repo
 Clone or fork the repo
 ```
      git clone git@github.com:bbejeck/kafka-streams    
      cd kafka-streams
 ```     
-     
-     
-    
 Then copy the json config files to json generator conf directory
 ```
     cp streaming-workflows/* <dir>/json-data-generator-1.2.0/conf
@@ -47,6 +45,7 @@ Create all the topics required by the examples
      args are kafka home, zookeeper host and zookeeper port adjust accordingly
 ```     
 
+#### Prepare to run the examples 
 Start zookeeper and kafka
 ```
       kafka-install-dir/bin/zookeeper-server-start.sh ../conf/zookeeper.properties

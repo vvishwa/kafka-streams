@@ -17,6 +17,7 @@
 package bbejeck.model;
 
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * User: Bill Bejeck
@@ -106,6 +107,8 @@ public class Purchase {
         private Date purchaseDate;
         private String zipCode;
 
+        private static final String CC_NUMBER_REPLACEMENT="xxxx-xxxx-xxxx-";
+
         private Builder() {
         }
 
@@ -116,6 +119,14 @@ public class Purchase {
 
         public Builder lastName(String val) {
             lastName = val;
+            return this;
+        }
+
+
+        public Builder maskCreditCard(){
+            Objects.requireNonNull(this.creditCardNumber, "Credit Card can't be null");
+            String last4Digits = this.creditCardNumber.split("-")[3];
+            this.creditCardNumber = CC_NUMBER_REPLACEMENT+last4Digits;
             return this;
         }
 

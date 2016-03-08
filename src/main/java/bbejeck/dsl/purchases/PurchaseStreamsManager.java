@@ -14,24 +14,14 @@
  * limitations under the License.
  */
 
-package bbejeck.processor.purchases;
-
-import bbejeck.model.Purchase;
-import bbejeck.model.RewardAccumulator;
-import org.apache.kafka.streams.processor.AbstractProcessor;
+package bbejeck.dsl.purchases;
 
 /**
  * User: Bill Bejeck
- * Date: 2/20/16
- * Time: 9:44 AM
+ * Date: 3/7/16
+ * Time: 6:14 PM
  */
-public class CustomerRewards extends AbstractProcessor<String,Purchase> {
+public interface PurchaseStreamsManager {
 
-    @Override
-    public void process(String key, Purchase value) {
-        RewardAccumulator accumulator = RewardAccumulator.newBuilder(value).build();
-        context().forward(key,accumulator);
-        context().commit();
 
-    }
 }

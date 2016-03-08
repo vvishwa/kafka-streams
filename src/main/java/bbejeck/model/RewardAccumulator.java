@@ -23,19 +23,37 @@ package bbejeck.model;
  */
 public class RewardAccumulator {
 
-    private String custmerName;
+    private String customerName;
     private double purchaseTotal;
 
-    public RewardAccumulator(String custmerName, double purchaseTotal) {
-        this.custmerName = custmerName;
+    private RewardAccumulator(String customerName, double purchaseTotal) {
+        this.customerName = customerName;
         this.purchaseTotal = purchaseTotal;
     }
 
-    public String getCustmerName() {
-        return custmerName;
+    public String getCustomerName() {
+        return customerName;
     }
 
     public double getPurchaseTotal() {
         return purchaseTotal;
+    }
+
+    public static Builder newBuilder(Purchase purchase){return new Builder(purchase);}
+
+    public static final class Builder {
+        private String customerName;
+        private double purchaseTotal;
+
+        private Builder(Purchase purchase){
+           this.customerName = purchase.getLastName()+","+purchase.getFirstName();
+           this.purchaseTotal = purchase.getPrice() * purchase.getQuantity();
+        }
+
+
+        public RewardAccumulator build(){
+            return new RewardAccumulator(customerName,purchaseTotal);
+        }
+
     }
 }

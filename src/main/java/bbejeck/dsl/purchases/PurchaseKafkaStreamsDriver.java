@@ -24,11 +24,9 @@ import bbejeck.serializer.JsonSerializer;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.kafka.streams.KafkaStreams;
-import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KStreamBuilder;
-import org.apache.kafka.streams.kstream.KeyValueMapper;
 import org.apache.kafka.streams.processor.internals.WallclockTimestampExtractor;
 
 import java.util.Properties;
@@ -55,28 +53,13 @@ public class PurchaseKafkaStreamsDriver {
 
         KStreamBuilder kStreamBuilder = new KStreamBuilder();
 
-        KeyValueMapper<String,Purchase,KeyValue<String,Purchase>> creditCardMasking = (key, prchs) -> {
-            Purchase masked = Purchase.newBuilder(prchs).maskCreditCard().build();
-            return new KeyValue<>(key,masked);
-        };
-
-        KeyValueMapper<String,Purchase,KeyValue<String,PurchasePattern>> createPattern = (key, prchs) ->{
-            PurchasePattern pattern = PurchasePattern.newBuilder().date(prchs.getPurchaseDate())
-                    .item(prchs.getItemPurchased()).build();
-            return new KeyValue<>(key,pattern);
-        };
-
-        KeyValueMapper<String,Purchase,KeyValue<String,RewardAccumulator>> createReward = (key, prchs) -> {
-                 RewardAccumulator accumulator = RewardAccumulator.newBuilder(prchs).build();
-            return new KeyValue<>(key,accumulator);
-        };
 
         KStream<String,Purchase> purchaseKStream = kStreamBuilder.stream(stringDeserializer,purchaseJsonDeserializer,"src-topic")
-                .map(creditCardMasking);
+                .mapValues(p -> Purchase.builder(p).maskCreditCard().build());
 
-        purchaseKStream.map(createPattern).to("patterns",stringSerializer,purchasePatternJsonSerializer);
+        purchaseKStream.mapValues(p -> PurchasePattern.builder(p).build()).to("patterns",stringSerializer,purchasePatternJsonSerializer);
 
-        purchaseKStream.map(createReward).to("rewards",stringSerializer,rewardAccumulatorJsonSerializer);
+        purchaseKStream.mapValues(p -> RewardAccumulator.builder(p).build()).to("rewards",stringSerializer,rewardAccumulatorJsonSerializer);
 
         purchaseKStream.to("purchases",stringSerializer,purchaseJsonSerializer);
 

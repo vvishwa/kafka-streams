@@ -46,11 +46,11 @@ public class Purchase {
         zipCode = builder.zipCode;
     }
 
-    public static Builder newBuilder() {
+    public static Builder builder() {
         return new Builder();
     }
 
-    public static Builder newBuilder(Purchase copy) {
+    public static Builder builder(Purchase copy) {
         Builder builder = new Builder();
         builder.firstName = copy.firstName;
         builder.lastName = copy.lastName;

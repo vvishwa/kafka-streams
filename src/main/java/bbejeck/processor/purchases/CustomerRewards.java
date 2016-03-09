@@ -29,7 +29,7 @@ public class CustomerRewards extends AbstractProcessor<String,Purchase> {
 
     @Override
     public void process(String key, Purchase value) {
-        RewardAccumulator accumulator = RewardAccumulator.newBuilder(value).build();
+        RewardAccumulator accumulator = RewardAccumulator.builder(value).build();
         context().forward(key,accumulator);
         context().commit();
 

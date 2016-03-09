@@ -39,7 +39,10 @@ public class PurchasePattern {
         return new Builder();
     }
 
+    public static Builder builder(Purchase purchase){
+        return new Builder(purchase);
 
+    }
     public String getZipCode() {
         return zipCode;
     }
@@ -58,7 +61,13 @@ public class PurchasePattern {
         private String item;
         private Date date;
 
-        private Builder() {
+        private  Builder() {
+        }
+
+        private Builder(Purchase purchase) {
+            this.zipCode = purchase.getZipCode();
+            this.item = purchase.getItemPurchased();
+            this.date = purchase.getPurchaseDate();
         }
 
         public Builder zipCode(String val) {

@@ -39,7 +39,7 @@ public class RewardAccumulator {
         return purchaseTotal;
     }
 
-    public static Builder newBuilder(Purchase purchase){return new Builder(purchase);}
+    public static Builder builder(Purchase purchase){return new Builder(purchase);}
 
     public static final class Builder {
         private String customerName;

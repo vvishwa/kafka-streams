@@ -52,18 +52,18 @@ Start zookeeper and kafka
       kafka-install-dir/bin/kafka-server-start ../conf/server.properties
 ```
 
-### Running the Purchase Streaming Examples ###
+### Running the Purchase Processor API KStreams API Examples ###
      cd <dir>/json-data-generator-1.2.0/
      java -jar json-data-generator-1.2.0 purchases-config.json
      cd kafka-streams
-     ./gradlew runPurchaseStreams
+     ./gradlew runPurchaseProcessor | runPurchaseStreams
      
 
-### Running the Stock Trades Streaming Examples ###
+### Running the Stock Trades Processor API or KStreams API Examples ###
      cd <dir>/json-data-generator-1.2.0/
      java -jar json-data-generator-1.2.0 stock-transactions-config.json
      cd kafka-streams
-     ./gradlew runStockStreams
+     ./gradlew runStockProcessor | runStockStreams
 
 ### Viewing the results of the purchase streaming examples ###
     cd kafka_install-dir/bin

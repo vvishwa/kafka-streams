@@ -1,7 +1,7 @@
 #kafka-streams
 This is the repository for the examples of using Kafka streams covered in the blog posts: 
 
-*    [Kafka Streams - The Processor API](codingjunkie.net/kafka-processor-part1/)
+*    [Kafka Streams - The Processor API](http://codingjunkie.net/kafka-processor-part1/)
 *    [Kafka Streams - The KStreams API](http://codingjunkie.net/kafka-streams-part2/)
 
 ## Requirements to build this project

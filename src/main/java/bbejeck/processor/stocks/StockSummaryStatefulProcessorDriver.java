@@ -16,16 +16,18 @@
 
 package bbejeck.processor.stocks;
 
-import bbejeck.serializer.JsonDeserializer;
-import bbejeck.serializer.JsonSerializer;
 import bbejeck.model.StockTransaction;
 import bbejeck.model.StockTransactionSummary;
+import bbejeck.serializer.JsonDeserializer;
+import bbejeck.serializer.JsonSerializer;
+import org.apache.kafka.common.serialization.Serde;
+import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.processor.TopologyBuilder;
-import org.apache.kafka.streams.processor.internals.WallclockTimestampExtractor;
+import org.apache.kafka.streams.processor.WallclockTimestampExtractor;
 import org.apache.kafka.streams.state.Stores;
 
 import java.util.Properties;
@@ -50,11 +52,12 @@ public class StockSummaryStatefulProcessorDriver {
         StringSerializer stringSerializer = new StringSerializer();
         StringDeserializer stringDeserializer = new StringDeserializer();
 
+        Serde<StockTransaction> stockTransactionSerde = Serdes.serdeFrom(stockTxnJsonSerializer,stockTxnDeserializer);
 
         builder.addSource("stocks-source", stringDeserializer, stockTxnDeserializer, "stocks")
-                       .addProcessor("summary", StockSummary::new, "stocks-source")
+                       .addProcessor("summary", StockSummaryProcessor::new, "stocks-source")
                        .addStateStore(Stores.create("stock-transactions").withStringKeys()
-                               .withValues(stockTxnSummarySerializer,stockTxnSummaryDeserializer).inMemory().maxEntries(100).build(),"summary")
+                               .withValues(stockTransactionSerde).inMemory().maxEntries(100).build(),"summary")
                        .addSink("sink", "stocks-out", stringSerializer,stockTxnJsonSerializer,"stocks-source")
                        .addSink("sink-2", "transaction-summary", stringSerializer, stockTxnSummarySerializer, "summary");
 
@@ -69,14 +72,10 @@ public class StockSummaryStatefulProcessorDriver {
         Properties props = new Properties();
         props.put(StreamsConfig.CLIENT_ID_CONFIG, "Sample-Stateful-Processor");
         props.put("group.id", "test-consumer-group");
-        props.put(StreamsConfig.JOB_ID_CONFIG, "stateful_processor_id");
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "stateful_processor_id");
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(StreamsConfig.ZOOKEEPER_CONNECT_CONFIG, "localhost:2181");
         props.put(StreamsConfig.REPLICATION_FACTOR_CONFIG, 1);
-        props.put(StreamsConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        props.put(StreamsConfig.VALUE_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
-        props.put(StreamsConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-        props.put(StreamsConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         props.put(StreamsConfig.TIMESTAMP_EXTRACTOR_CLASS_CONFIG, WallclockTimestampExtractor.class);
         return props;
     }

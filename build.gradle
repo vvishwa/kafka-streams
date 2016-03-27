@@ -12,17 +12,26 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 
-mainClassName = System.getProperty("mainClass")
-
-task runPurchaseStreams(type: JavaExec){
+task runPurchaseProcessor(type: JavaExec){
    classpath sourceSets.main.runtimeClasspath
    main = "bbejeck.processor.purchases.PurchaseProcessorDriver"
 }
 
-task runStockStreams(type: JavaExec){
+task runPurchaseStreams(type: JavaExec){
+    classpath sourceSets.main.runtimeClasspath
+    main = "bbejeck.streams.purchases.PurchaseKafkaStreamsDriver"
+}
+
+task runStockProcessor(type: JavaExec){
    classpath sourceSets.main.runtimeClasspath
    main = "bbejeck.processor.stocks.StockSummaryStatefulProcessorDriver"
 }
+
+task runStockStreams(type: JavaExec){
+    classpath sourceSets.main.runtimeClasspath
+    main = "bbejeck.streams.stocks.StocksKafkaStreamsDriver"
+}
+
 
 
 

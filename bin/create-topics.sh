@@ -5,7 +5,7 @@ KAFKA_HOME=$1
 ZK_HOST=$2
 ZK_PORT=$3
 
-topics="src-topic patterns rewards purchases stocks stocks-out transaction-summary"
+topics="src-topic patterns rewards purchases stocks stocks-out transaction-summary twitterData english french spanish"
 
 for topic in ${topics}; do
      echo "attempting to create topic ${topic}"

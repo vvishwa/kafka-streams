@@ -42,4 +42,13 @@ public class StockTransactionCollector {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return "StockTransactionCollector{" +
+                "amount=" + amount +
+                ", tickerSymbol='" + tickerSymbol + '\'' +
+                ", sharesPurchased=" + sharesPurchased +
+                ", sharesSold=" + sharesSold +
+                '}';
+    }
 }

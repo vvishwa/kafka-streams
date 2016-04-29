@@ -72,4 +72,14 @@ public class StockTransaction {
         this.timeStamp = timeStamp;
     }
 
+    @Override
+    public String toString() {
+        return "StockTransaction{" +
+                "symbol='" + symbol + '\'' +
+                ", type='" + type + '\'' +
+                ", shares=" + shares +
+                ", amount=" + amount +
+                ", timeStamp=" + timeStamp +
+                '}';
+    }
 }

@@ -1,7 +1,10 @@
 #kafka-streams
 This is the repository for the examples of using Kafka streams covered in the blog posts: 
 
-*    [Introducing The Kafka Processor API](codingjunkie.net/kafka-processor-part1/)
+ *   [Kafka Streams - The Processor API](http://codingjunkie.net/kafka-processor-part1/)
+ *   [Kafka Streams - The KStreams API](http://codingjunkie.net/kafka-streams-part2/)
+ *   [Machine Learning with Kafka Streams](http://codingjunkie.net/kafka-streams-machine-learning/)
+
 
 ## Requirements to build this project
 
@@ -10,20 +13,20 @@ This is the repository for the examples of using Kafka streams covered in the bl
 
 ## Requirements to run the examples
 
-1.    [kafka](https://github.com/apache/kafka) version kafka_2.11-0.10.0.0-SNAPSHOT see the section marked "Running a task on a particular version of Scala"
+1.    [kafka](https://github.com/apache/kafka) version kafka_2.11-0.10.1.0-SNAPSHOT see the section marked "Running a task on a particular version of Scala"
 2.    The [json-data-generator](https://github.com/acesinc/json-data-generator) from [ACES,Inc](http://acesinc.net/) 
 
 
 ## Dependencies included in repository
 As the Kafka Streams/Processor API is a work in progress, this repo includes the following jar files known to work with the examples
 
-1.    kafka-streams-0.10.0.0-SNAPSHOT.jar
-2.    kafka-clients-0.10.0.0-SNAPSHOT.jar
+1.    kafka-streams-0.10.1.0-SNAPSHOT.jar
+2.    kafka-clients-0.10.1.0-SNAPSHOT.jar
 
 ## Setup Instructions
 
-#### Extact the kafka_2.11-0.10.0.0-SNAPSHOT.tgz file ####
-    tar -xvzf kafka_2.11-0.10.0.0-SNAPSHOT.tgz
+#### Extact the kafka_2.11-0.10.1.0-SNAPSHOT.tgz file ####
+    tar -xvzf kafka_2.11-0.10.1.0-SNAPSHOT.tgz
     
 #### Install the Json-Data-Generator  
 Download the latest [json-data-generator release](https://github.com/acesinc/json-data-generator/releases) and follow the install instructions [here](http://acesinc.net/introducing-a-streaming-json-data-generator/)
@@ -64,6 +67,13 @@ Start zookeeper and kafka
      java -jar json-data-generator-1.2.0 stock-transactions-config.json
      cd kafka-streams
      ./gradlew runStockProcessor | runStockStreams
+     
+### Running the Twitter KStreams Language Classification Example ###
+    rename src/main/resources/twitter-app.properties.template to twitter-app.properties 
+    fill out the properties file with all the required values
+    
+    cd kafka-streams
+    ./gradlew runTwitterKstreamNLP 
 
 ### Viewing the results of the purchase streaming examples ###
     cd kafka_install-dir/bin
@@ -72,4 +82,8 @@ Start zookeeper and kafka
 ### Viewing the results of the stock-trading streaming examples ###
     cd kafka_install-dir/bin
     ./kafka-console-consumer --topic [stocks-out|transaction-summary] --zookeeper localhost:2181
+    
+### Viewing the results of the Twitter KStreams Language Classification Example ###
+    cd kafka_install-dir/bin
+    ./kafka-console-consumer --topic [english|french|spanish] --zookeeper localhost:2181    
           

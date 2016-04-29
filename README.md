@@ -44,7 +44,7 @@ Then copy the json config files to json generator conf directory
     
 Create all the topics required by the examples
 ```
-     ./bin/create-topics.sh /usr/local/kafka_2.11-0.10.0.0 localhost 2181
+     ./bin/create-topics.sh /usr/local/kafka_2.11-0.10.1.0 localhost 2181
      args are kafka home, zookeeper host and zookeeper port adjust accordingly
 ```     
 

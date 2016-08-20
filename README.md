@@ -27,7 +27,14 @@ As the Kafka Streams/Processor API is a work in progress, this repo includes the
 
 #### Extact the kafka_2.11-0.10.1.0-SNAPSHOT.tgz file ####
     tar -xvzf kafka_2.11-0.10.1.0-SNAPSHOT.tgz
-    
+
+
+#### Start zookeeper and kafka
+```
+      kafka-install-dir/bin/zookeeper-server-start.sh kafka-install-dir/conf/zookeeper.properties
+      kafka-install-dir/bin/kafka-server-start.sh kafka-install-dir/conf/server.properties
+```
+
 #### Install the Json-Data-Generator  
 Download the latest [json-data-generator release](https://github.com/acesinc/json-data-generator/releases) and follow the install instructions [here](http://acesinc.net/introducing-a-streaming-json-data-generator/)
 
@@ -47,13 +54,6 @@ Create all the topics required by the examples
      ./bin/create-topics.sh /usr/local/kafka_2.11-0.10.1.0 localhost 2181
      args are kafka home, zookeeper host and zookeeper port adjust accordingly
 ```     
-
-#### Prepare to run the examples 
-Start zookeeper and kafka
-```
-      kafka-install-dir/bin/zookeeper-server-start.sh ../conf/zookeeper.properties
-      kafka-install-dir/bin/kafka-server-start ../conf/server.properties
-```
 
 ### Running the Purchase Processor API KStreams API Examples ###
      cd <dir>/json-data-generator-1.2.0/

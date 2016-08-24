@@ -29,7 +29,7 @@ import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KStreamBuilder;
-import org.apache.kafka.streams.kstream.TumblingWindows;
+import org.apache.kafka.streams.kstream.TimeWindows;
 import org.apache.kafka.streams.kstream.Windowed;
 import org.apache.kafka.streams.kstream.internals.WindowedDeserializer;
 import org.apache.kafka.streams.kstream.internals.WindowedSerializer;
@@ -70,7 +70,7 @@ public class StocksKafkaStreamsDriver {
                 .map((k,v)-> new KeyValue<>(v.getSymbol(),v))
                 .aggregateByKey(StockTransactionCollector::new,
                                (k, v, stockTransactionCollector) -> stockTransactionCollector.add(v),
-                               TumblingWindows.of("stock-summaries").with(10000),
+                               TimeWindows.of("stock-summaries", 10000),
                                stringSerde,collectorSerde)
                 .to(windowedSerde,collectorSerde,"transaction-summary");
 

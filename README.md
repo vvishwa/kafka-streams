@@ -17,12 +17,6 @@ This is the repository for the examples of using Kafka streams covered in the bl
 2.    The [json-data-generator](https://github.com/acesinc/json-data-generator) from [ACES,Inc](http://acesinc.net/) 
 
 
-## Dependencies included in repository
-As the Kafka Streams/Processor API is a work in progress, this repo includes the following jar files known to work with the examples
-
-1.    kafka-streams-0.10.1.0-SNAPSHOT.jar
-2.    kafka-clients-0.10.1.0-SNAPSHOT.jar
-
 ## Setup Instructions
 
 #### Extact the kafka_2.11-0.10.1.0-SNAPSHOT.tgz file ####

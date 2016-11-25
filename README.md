@@ -13,14 +13,14 @@ This is the repository for the examples of using Kafka streams covered in the bl
 
 ## Requirements to run the examples
 
-1.    [kafka](https://github.com/apache/kafka) version kafka_2.11-0.10.1.0-SNAPSHOT see the section marked "Running a task on a particular version of Scala"
+1.    [kafka](https://github.com/apache/kafka) version kafka_2.11-0.10.1.0 see the section marked "Running a task on a particular version of Scala"
 2.    The [json-data-generator](https://github.com/acesinc/json-data-generator) from [ACES,Inc](http://acesinc.net/) 
 
 
 ## Setup Instructions
 
-#### Extact the kafka_2.11-0.10.1.0-SNAPSHOT.tgz file ####
-    tar -xvzf kafka_2.11-0.10.1.0-SNAPSHOT.tgz
+#### Extact the kafka_2.11-0.10.1.0.tgz file ####
+    tar -xvzf kafka_2.11-0.10.1.0.tgz
 
 
 #### Start zookeeper and kafka

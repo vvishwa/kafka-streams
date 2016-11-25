@@ -66,12 +66,13 @@ public class StocksKafkaStreamsDriver {
 
         KStream<String,StockTransaction> transactionKStream =  kStreamBuilder.stream(stringSerde,transactionSerde,"stocks");
 
-        transactionKStream.through(stringSerde, transactionSerde,"stocks-out")
-                .map((k,v)-> new KeyValue<>(v.getSymbol(),v))
-                .aggregateByKey(StockTransactionCollector::new,
+        transactionKStream.map((k,v)-> new KeyValue<>(v.getSymbol(),v))
+                          .through(stringSerde, transactionSerde,"stocks-out")
+                          .groupBy((k,v) -> k, stringSerde, transactionSerde)
+                          .aggregate(StockTransactionCollector::new,
                                (k, v, stockTransactionCollector) -> stockTransactionCollector.add(v),
-                               TimeWindows.of("stock-summaries", 10000),
-                               stringSerde,collectorSerde)
+                               TimeWindows.of(10000),
+                               collectorSerde, "stock-summaries")
                 .to(windowedSerde,collectorSerde,"transaction-summary");
 
 

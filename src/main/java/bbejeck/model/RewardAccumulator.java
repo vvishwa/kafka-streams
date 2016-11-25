@@ -39,6 +39,14 @@ public class RewardAccumulator {
         return purchaseTotal;
     }
 
+    @Override
+    public String toString() {
+        return "RewardAccumulator{" +
+                "customerName='" + customerName + '\'' +
+                ", purchaseTotal=" + purchaseTotal +
+                '}';
+    }
+
     public static Builder builder(Purchase purchase){return new Builder(purchase);}
 
     public static final class Builder {

@@ -60,10 +60,7 @@ public class PurchaseKafkaStreamsDriver {
 
         Serde<Purchase> purchaseSerde = Serdes.serdeFrom(purchaseJsonSerializer,purchaseJsonDeserializer);
 
-        StringDeserializer stringDeserializer = new StringDeserializer();
-        StringSerializer stringSerializer = new StringSerializer();
-
-        Serde<String> stringSerde = Serdes.serdeFrom(stringSerializer,stringDeserializer);
+        Serde<String> stringSerde = Serdes.String();
 
         KStreamBuilder kStreamBuilder = new KStreamBuilder();
 

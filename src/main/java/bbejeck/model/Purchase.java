@@ -96,6 +96,19 @@ public class Purchase {
         return zipCode;
     }
 
+    @Override
+    public String toString() {
+        return "Purchase{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", creditCardNumber='" + creditCardNumber + '\'' +
+                ", itemPurchased='" + itemPurchased + '\'' +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                ", purchaseDate=" + purchaseDate +
+                ", zipCode='" + zipCode + '\'' +
+                '}';
+    }
 
     public static final class Builder {
         private String firstName;

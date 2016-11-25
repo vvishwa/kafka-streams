@@ -56,6 +56,15 @@ public class PurchasePattern {
     }
 
 
+    @Override
+    public String toString() {
+        return "PurchasePattern{" +
+                "zipCode='" + zipCode + '\'' +
+                ", item='" + item + '\'' +
+                ", date=" + date +
+                '}';
+    }
+
     public static final class Builder {
         private String zipCode;
         private String item;

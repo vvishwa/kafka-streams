@@ -52,12 +52,12 @@ public class StockSummaryStatefulProcessorDriver {
         StringSerializer stringSerializer = new StringSerializer();
         StringDeserializer stringDeserializer = new StringDeserializer();
 
-        Serde<StockTransaction> stockTransactionSerde = Serdes.serdeFrom(stockTxnJsonSerializer,stockTxnDeserializer);
+        Serde<StockTransactionSummary> stockTransactionSummarySerde = Serdes.serdeFrom(stockTxnSummarySerializer,stockTxnSummaryDeserializer);
 
         builder.addSource("stocks-source", stringDeserializer, stockTxnDeserializer, "stocks")
                        .addProcessor("summary", StockSummaryProcessor::new, "stocks-source")
                        .addStateStore(Stores.create("stock-transactions").withStringKeys()
-                               .withValues(stockTransactionSerde).inMemory().maxEntries(100).build(),"summary")
+                               .withValues(stockTransactionSummarySerde).inMemory().maxEntries(100).build(),"summary")
                        .addSink("sink", "stocks-out", stringSerializer,stockTxnJsonSerializer,"stocks-source")
                        .addSink("sink-2", "transaction-summary", stringSerializer, stockTxnSummarySerializer, "summary");
 

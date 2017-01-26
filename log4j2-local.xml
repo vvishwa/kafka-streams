@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<!-- Use only the console appender for running locally -->
+<log4j:configuration debug="true">
+	<appender name="CONSOLE_APPENDER" class="org.apache.log4j.ConsoleAppender">
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{HH:mm:ss,SSS} [%t] %-3p %c{2} %m%n" />
+		</layout>
+	</appender>
+
+	<root>
+		<level value="debug" />
+		<appender-ref ref="CONSOLE_APPENDER" />
+	</root>
+</log4j:configuration>

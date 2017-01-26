@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 Bill Bejeck
+ * Copyright 2016 Vijay Vishwakarma
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 package bbejeck.processor.stocks;
 
 import bbejeck.model.StockTransaction;
-import bbejeck.model.StockTransactionSummary;
+import bbejeck.model.StockDepth;
 import bbejeck.serializer.JsonDeserializer;
 import bbejeck.serializer.JsonSerializer;
 import org.apache.kafka.common.serialization.Serde;
@@ -34,11 +34,11 @@ import org.apache.log4j.BasicConfigurator;
 import java.util.Properties;
 
 /**
- * User: Bill Bejeck
- * Date: 2/8/16
+ * User: Vijay Vishwakarma
+ * Date: 1/3/17
  * Time: 5:11 PM
  */
-public class StockSummaryStatefulProcessorDriver {
+public class StockDepthStatefulProcessorDriver {
 
     public static void main(String[] args) {
     	
@@ -48,34 +48,34 @@ public class StockSummaryStatefulProcessorDriver {
 
         TopologyBuilder builder = new TopologyBuilder();
 
-        JsonSerializer<StockTransactionSummary> stockTxnSummarySerializer = new JsonSerializer<>();
-        JsonDeserializer<StockTransactionSummary> stockTxnSummaryDeserializer = new JsonDeserializer<>(StockTransactionSummary.class);
+        JsonSerializer<StockDepth> stockTxnDepthSerializer = new JsonSerializer<>();
+        JsonDeserializer<StockDepth> stockTxnDepthDeserializer = new JsonDeserializer<>(StockDepth.class);
         JsonDeserializer<StockTransaction> stockTxnDeserializer = new JsonDeserializer<>(StockTransaction.class);
         JsonSerializer<StockTransaction> stockTxnJsonSerializer = new JsonSerializer<>();
         StringSerializer stringSerializer = new StringSerializer();
         StringDeserializer stringDeserializer = new StringDeserializer();
 
-        Serde<StockTransactionSummary> stockTransactionSummarySerde = Serdes.serdeFrom(stockTxnSummarySerializer,stockTxnSummaryDeserializer);
+        Serde<StockDepth> StockDepthSerde = Serdes.serdeFrom(stockTxnDepthSerializer,stockTxnDepthDeserializer);
 
         builder.addSource("stocks-source", stringDeserializer, stockTxnDeserializer, "stocks", "stocks2")
-                       .addProcessor("summary", StockSummaryProcessor::new, "stocks-source")
-                       .addStateStore(Stores.create("stock-transactions").withStringKeys()
-                               .withValues(stockTransactionSummarySerde).inMemory().maxEntries(100).build(),"summary")
+                       .addProcessor("depth", StockDepthProcessor::new, "stocks-source")
+                       .addStateStore(Stores.create("transaction-depth").withStringKeys()
+                               .withValues(StockDepthSerde).inMemory().maxEntries(100).build(),"depth")
                        .addSink("sink", "stocks-out", stringSerializer,stockTxnJsonSerializer,"stocks-source")
-                       .addSink("sink-2", "transaction-summary", stringSerializer, stockTxnSummarySerializer, "summary");
+                       .addSink("sink-2", "transaction-depth", stringSerializer, stockTxnDepthSerializer, "depth");
 
-        System.out.println("Starting StockSummaryStatefulProcessor Example");
+        System.out.println("Starting StockDepthStatefulProcessor Example");
         KafkaStreams streaming = new KafkaStreams(builder, streamingConfig);
         streaming.start();
-        System.out.println("StockSummaryStatefulProcessor Example now started");
+        System.out.println("StockDepthStatefulProcessor Example now started");
 
     }
 
     private static Properties getProperties() {
         Properties props = new Properties();
-        props.put(StreamsConfig.CLIENT_ID_CONFIG, "Sample-Stateful-Processor");
-        props.put("group.id", "test-consumer-group");
-        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "stateful_processor_id");
+        props.put(StreamsConfig.CLIENT_ID_CONFIG, "Stock-Depth-Stateful-Processor");
+        props.put("group.id", "depth-consumer-group");
+        props.put(StreamsConfig.APPLICATION_ID_CONFIG, "stateful_depth_processor_id");
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "jcionapp1d.jc.jefco.com:9092");
         props.put(StreamsConfig.ZOOKEEPER_CONNECT_CONFIG, "jcionapp1d.jc.jefco.com:2181");
         props.put(StreamsConfig.REPLICATION_FACTOR_CONFIG, 1);

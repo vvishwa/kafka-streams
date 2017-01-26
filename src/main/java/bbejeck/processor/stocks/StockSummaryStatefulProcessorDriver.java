@@ -29,7 +29,6 @@ import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.processor.TopologyBuilder;
 import org.apache.kafka.streams.processor.WallclockTimestampExtractor;
 import org.apache.kafka.streams.state.Stores;
-import org.apache.log4j.BasicConfigurator;
 
 import java.util.Properties;
 
@@ -41,8 +40,6 @@ import java.util.Properties;
 public class StockSummaryStatefulProcessorDriver {
 
     public static void main(String[] args) {
-    	
-    	BasicConfigurator.configure();
 
         StreamsConfig streamingConfig = new StreamsConfig(getProperties());
 
@@ -57,7 +54,7 @@ public class StockSummaryStatefulProcessorDriver {
 
         Serde<StockTransactionSummary> stockTransactionSummarySerde = Serdes.serdeFrom(stockTxnSummarySerializer,stockTxnSummaryDeserializer);
 
-        builder.addSource("stocks-source", stringDeserializer, stockTxnDeserializer, "stocks", "stocks2")
+        builder.addSource("stocks-source", stringDeserializer, stockTxnDeserializer, "stocks")
                        .addProcessor("summary", StockSummaryProcessor::new, "stocks-source")
                        .addStateStore(Stores.create("stock-transactions").withStringKeys()
                                .withValues(stockTransactionSummarySerde).inMemory().maxEntries(100).build(),"summary")
@@ -76,8 +73,8 @@ public class StockSummaryStatefulProcessorDriver {
         props.put(StreamsConfig.CLIENT_ID_CONFIG, "Sample-Stateful-Processor");
         props.put("group.id", "test-consumer-group");
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "stateful_processor_id");
-        props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "jcionapp1d.jc.jefco.com:9092");
-        props.put(StreamsConfig.ZOOKEEPER_CONNECT_CONFIG, "jcionapp1d.jc.jefco.com:2181");
+        props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        props.put(StreamsConfig.ZOOKEEPER_CONNECT_CONFIG, "localhost:2181");
         props.put(StreamsConfig.REPLICATION_FACTOR_CONFIG, 1);
         props.put(StreamsConfig.TIMESTAMP_EXTRACTOR_CLASS_CONFIG, WallclockTimestampExtractor.class);
         return props;

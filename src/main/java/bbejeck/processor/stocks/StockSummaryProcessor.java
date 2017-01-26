@@ -53,6 +53,7 @@ public class StockSummaryProcessor extends AbstractProcessor<String, StockTransa
 
 
     @Override
+    @SuppressWarnings("unchecked")
     public void init(ProcessorContext context) {
         this.context = context;
         this.context.schedule(10000);

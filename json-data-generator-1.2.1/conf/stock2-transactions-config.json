@@ -1,0 +1,21 @@
+{
+  "workflows": [
+    {
+      "workflowName": "stock2-transactions",
+      "workflowFilename": "stock2-transactions.json"
+    }
+  ],
+  "producers": [
+    {
+      "type": "kafka",
+      "broker.server": "jcionapp1d.jc.jefco.com",
+      "broker.port": 9092,
+      "topic": "stocks2",
+      "flatten" :false,
+      "sync": false
+    },
+    {
+      "type": "logger"
+    }
+  ]
+}

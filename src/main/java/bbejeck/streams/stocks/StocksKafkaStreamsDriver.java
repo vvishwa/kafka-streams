@@ -16,10 +16,8 @@
 
 package bbejeck.streams.stocks;
 
-import bbejeck.model.StockTransaction;
-import bbejeck.model.StockTransactionCollector;
-import bbejeck.serializer.JsonDeserializer;
-import bbejeck.serializer.JsonSerializer;
+import java.util.Properties;
+
 import org.apache.kafka.common.serialization.Serde;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -27,6 +25,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.KeyValue;
 import org.apache.kafka.streams.StreamsConfig;
+import org.apache.kafka.streams.kstream.JoinWindows;
 import org.apache.kafka.streams.kstream.KStream;
 import org.apache.kafka.streams.kstream.KStreamBuilder;
 import org.apache.kafka.streams.kstream.TimeWindows;
@@ -34,8 +33,12 @@ import org.apache.kafka.streams.kstream.Windowed;
 import org.apache.kafka.streams.kstream.internals.WindowedDeserializer;
 import org.apache.kafka.streams.kstream.internals.WindowedSerializer;
 import org.apache.kafka.streams.processor.WallclockTimestampExtractor;
+import org.apache.log4j.BasicConfigurator;
 
-import java.util.Properties;
+import bbejeck.model.StockTransaction;
+import bbejeck.model.StockTransactionCollector;
+import bbejeck.serializer.JsonDeserializer;
+import bbejeck.serializer.JsonSerializer;
 
 /**
  * User: Bill Bejeck
@@ -46,6 +49,8 @@ public class StocksKafkaStreamsDriver {
 
     public static void main(String[] args) {
 
+    	BasicConfigurator.configure();
+    	
         StreamsConfig streamingConfig = new StreamsConfig(getProperties());
 
         JsonSerializer<StockTransactionCollector> stockTransactionsSerializer = new JsonSerializer<>();
@@ -65,8 +70,11 @@ public class StocksKafkaStreamsDriver {
 
 
         KStream<String,StockTransaction> transactionKStream =  kStreamBuilder.stream(stringSerde,transactionSerde,"stocks");
+        
+        KStream<String,StockTransaction> transactionKStream2 =  kStreamBuilder.stream(stringSerde,transactionSerde,"stocks2");
 
-        transactionKStream.map((k,v)-> new KeyValue<>(v.getSymbol(),v))
+        transactionKStream.join(transactionKStream2, (v1, v2) -> merge(v1, v2), JoinWindows.of(10000))
+        				  .map((k,v)-> new KeyValue<>(v.getSymbol(),v))
                           .through(stringSerde, transactionSerde,"stocks-out")
                           .groupBy((k,v) -> k, stringSerde, transactionSerde)
                           .aggregate(StockTransactionCollector::new,
@@ -82,14 +90,18 @@ public class StocksKafkaStreamsDriver {
         System.out.println("Now started StockStreams Example");
 
     }
+    
+    private static StockTransaction merge(StockTransaction v1, StockTransaction v2) {
+		return v2;
+	}
 
     private static Properties getProperties() {
         Properties props = new Properties();
         props.put(StreamsConfig.CLIENT_ID_CONFIG, "Stocks-Streams-Processor");
         props.put("group.id", "stock-streams");
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "stocks_streams_id");
-        props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-        props.put(StreamsConfig.ZOOKEEPER_CONNECT_CONFIG, "localhost:2181");
+        props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "jcionapp1d.jc.jefco.com:9092");
+        props.put(StreamsConfig.ZOOKEEPER_CONNECT_CONFIG, "jcionapp1d.jc.jefco.com:2181");
         props.put(StreamsConfig.REPLICATION_FACTOR_CONFIG, 1);
         props.put(StreamsConfig.TIMESTAMP_EXTRACTOR_CLASS_CONFIG, WallclockTimestampExtractor.class);
         return props;

@@ -100,8 +100,8 @@ public class StocksKafkaStreamsDriver {
         props.put(StreamsConfig.CLIENT_ID_CONFIG, "Stocks-Streams-Processor");
         props.put("group.id", "stock-streams");
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "stocks_streams_id");
-        props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "jcionapp1d.jc.jefco.com:9092");
-        props.put(StreamsConfig.ZOOKEEPER_CONNECT_CONFIG, "jcionapp1d.jc.jefco.com:2181");
+        props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+        props.put(StreamsConfig.ZOOKEEPER_CONNECT_CONFIG, "localhost:2181");
         props.put(StreamsConfig.REPLICATION_FACTOR_CONFIG, 1);
         props.put(StreamsConfig.TIMESTAMP_EXTRACTOR_CLASS_CONFIG, WallclockTimestampExtractor.class);
         return props;

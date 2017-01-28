@@ -8,7 +8,7 @@
   "producers": [
     {
       "type": "kafka",
-      "broker.server": "jcionapp1d.jc.jefco.com",
+      "broker.server": "localhost",
       "broker.port": 9092,
       "topic": "stocks2",
       "flatten" :false,

@@ -78,7 +78,7 @@ public class StockDepthStatefulProcessorDriver {
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "stateful_depth_processor_id");
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         props.put(StreamsConfig.ZOOKEEPER_CONNECT_CONFIG, "localhost:2181");
-        props.put(StreamsConfig.REPLICATION_FACTOR_CONFIG, 1);
+        //props.put(StreamsConfig.REPLICATION_FACTOR_CONFIG, 0);
         props.put(StreamsConfig.TIMESTAMP_EXTRACTOR_CLASS_CONFIG, WallclockTimestampExtractor.class);
         return props;
     }

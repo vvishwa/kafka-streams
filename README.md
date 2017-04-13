@@ -62,6 +62,17 @@ Create all the topics required by the examples
      cd kafka-streams
      ./gradlew runStockProcessor | runStockStreams
      
+### Running the Stock2 Trades Processor API or KStreams API Examples ###
+#### This example is clone from previous but does stock comparision from2 different sources ####
+     cd <dir>/json-data-generator-1.2.0/
+     java -jar json-data-generator-1.2.0 stock2-transactions-config.json
+     cd kafka-streams
+     ./gradlew runStockProcessor | runStockStreams
+#On my PC I am using jdk 1.8 and json-data-generator 1.2.1
+c:\apps\json-data-generator-1.2.1-bin\json-data-generator-1.2.1>"c:\Program Files\Java\jdk1.8.0_73\bin\java.exe" -jar js
+on-data-generator-1.2.1.jar stock2-transactions-config.json
+     
+     
 ### Running the Twitter KStreams Language Classification Example ###
     rename src/main/resources/twitter-app.properties.template to twitter-app.properties 
     fill out the properties file with all the required values

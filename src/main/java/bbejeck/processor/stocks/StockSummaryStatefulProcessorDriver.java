@@ -68,7 +68,7 @@ public class StockSummaryStatefulProcessorDriver {
         KafkaStreams streaming = new KafkaStreams(builder, streamingConfig);
         streaming.start();
         System.out.println("StockSummaryStatefulProcessor Example now started");
-
+ 
     }
 
     private static Properties getProperties() {
